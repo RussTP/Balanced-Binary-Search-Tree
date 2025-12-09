@@ -17,11 +17,102 @@ export class Tree {
     return root;
     }
 
+    insert(value) {
+        this.root = this.insertNode(this.root, value);
+    }
+    
+    insertNode(node, value) {
+        if (node === null) return new Node(value);
+
+        if (value < node) {
+            node.left = this.insertNode(node.left, value);
+        } else {
+            node.right = this.insertNode(node.right, value);
+        }
+        return node;
+    }
+
+    getSuccessor(curr) {
+        curr = curr.right;
+        while (curr !== null && curr.left !== null)
+            curr = curr.left;
+        return curr;
+    }
+
+    delete(value) {
+        this.root = this.deleteItem(this.root, value);
+    }
+
+    deleteItem(node, value) {
+        if (node === null) return node;
+
+        if (value < node.data) {
+            node.left = this.deleteItem(node.left, value);
+        } else if (value > node.data) {
+            node.right = this.deleteItem(node.right, value);
+        } else {
+            if (node.left === null)
+                return node.right;
+            if (node.right === null)
+                return node.left;
+
+            const succ = this.getSuccessor(node);
+            node.data = succ.data;
+            node.right = this.deleteItem(node.right, succ.data);
+        }
+
+        return node;
+
+    }
+
+    find(value) {
+
+    }
+
+    levelOrderForEach(callback) {
+
+    }
+
+    inOrderForEach(callback) {
+
+    }
+
+    postOrderForEach(callback) {
+
+    }
+
+    height(value) {
+
+    }
+
+    depth(value) {
+
+    }
+
+    isBalanced() {
+
+    }
+
+    rebalance() {
+
+    }
+
+
+
 }
 
-const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
+/*const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 console.log("Root is:", tree.root);
+tree.insert(50);
+tree.insert(25);
+tree.delete(7);
+tree.delete(23);
 prettyPrint(tree.root);
+*/
 
-
+const tree = new Tree([5, 3, 7, 1, 9]);
+prettyPrint(tree.root);
+console.log("deleteing 7...");
+tree.delete(7);
+prettyPrint(tree.root);
 
