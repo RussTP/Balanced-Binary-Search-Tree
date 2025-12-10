@@ -2,10 +2,19 @@ import { Node } from "./node.js";
 import { prettyPrint } from "./prettyPrint.js";
 export class Tree {
     constructor(array) {
-        this.root = this.buildTree(array, 0, array.length -1);
+        this.root = this.buildTree(array);
     }
 
     buildTree(array, start, end) {
+
+
+    if (start === undefined) {
+        array = [...new Set(array)].sort((a, b) => a - b);
+        console.log("sorted array:", array)
+        start = 0;
+        end = array.length - 1;
+    }
+
     if (start > end) return null;
     
     let mid = Math.floor((start + end) / 2);
@@ -24,7 +33,7 @@ export class Tree {
     insertNode(node, value) {
         if (node === null) return new Node(value);
 
-        if (value < node) {
+        if (value < node.data) {
             node.left = this.insertNode(node.left, value);
         } else {
             node.right = this.insertNode(node.right, value);
@@ -66,6 +75,19 @@ export class Tree {
     }
 
     find(value) {
+        return this.findNode(this.root, value);
+    }
+
+    findNode(node, value) {
+        if (node === null) return node;
+
+        if (value === node.data) return node;
+
+        if (value < node.data) {
+            return this.findNode(node.left, value);
+        } else {
+            return this.findNode(node.right, value);
+        }
 
     }
 
@@ -107,12 +129,10 @@ tree.insert(50);
 tree.insert(25);
 tree.delete(7);
 tree.delete(23);
+tree.find(67);
 prettyPrint(tree.root);
 */
-
 const tree = new Tree([5, 3, 7, 1, 9]);
+console.log(tree.find(7));  // Should return the node with data: 7
+console.log(tree.find(99)); // Should return null
 prettyPrint(tree.root);
-console.log("deleteing 7...");
-tree.delete(7);
-prettyPrint(tree.root);
-
