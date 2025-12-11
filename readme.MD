@@ -1,3 +1,24 @@
-Balanced Binary Search Tree Project
+Binary Search Tree Project
 
-A BTS (balanced binary search tree) that takes a data array and balances the numbers apropriatley, with the middle number starting at 0 on the tree.
+This project takes random array values checks if balanced/unbalanced and rebalances
+
+Methods of traversals are also used:
+
+Level order: traverses tree breadth-first level order (starting from root)
+In order: traverses tree, left node, root, right node
+Pre order: traverses tree, root, left node, right node
+Post order: traversees tree, left node, right node, root
+
+Further functions:
+
+insert(value) allows you to insert a value
+
+delete(value) deletes the given value
+
+find(value) returns the node with the given value
+
+height(value) you can check the height of each node
+
+depth(value) you can check the depth of each node
+
+in your CLI - node index.js to test file

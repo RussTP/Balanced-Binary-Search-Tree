@@ -1,6 +1,5 @@
 import { Node } from "./node.js";
-import { prettyPrint } from "./prettyPrint.js";
-export class Tree {
+export default class Tree {
     constructor(array) {
         this.root = this.buildTree(array);
     }
@@ -78,6 +77,7 @@ export class Tree {
         return this.findNode(this.root, value);
     }
 
+
     findNode(node, value) {
         if (node === null) return node;
 
@@ -92,47 +92,130 @@ export class Tree {
     }
 
     levelOrderForEach(callback) {
+        if (!callback) {
+              throw new Error("No callback has been given an argument");
+        }
 
+        if (this.root === null) return; 
+
+        const queue = [this.root];
+
+        while (queue.length > 0) {
+            const node = queue.shift();
+            callback(node.data);
+
+            if (node.left !== null) {
+                queue.push(node.left);
+            }
+            if (node.right !== null) {
+                queue.push(node.right);
+            } 
+        }
     }
 
     inOrderForEach(callback) {
+        if (!callback) {
+            throw new Error("No callback has been given an argument");
+        }
+        function traverse(node) {
+            if (node === null) return;
+
+            traverse(node.left);
+            callback(node.data);
+            traverse(node.right);
+        }
+        traverse(this.root);
+
+
 
     }
 
-    postOrderForEach(callback) {
+    preOrderForEach(callback) {
+        if (!callback) {
+            throw new Error("No callback has been given an argument");
+        }
+            function traverse(node) {
+                if (node === null) return;
 
+                callback(node.data);
+                traverse(node.left);
+                traverse(node.right);
+            }
+            traverse(this.root);
+
+        }
+
+
+    postOrderForEach(callback) {
+            if (!callback) {
+                throw new Error("No callback has been given an argument");
+        }
+        function traverse(node) {
+            if (node === null) return;
+
+            traverse(node.left);
+            traverse(node.right);
+            callback(node.data);
+        }
+        traverse(this.root);
     }
 
     height(value) {
+        if (value === null) return;
 
+        const node = this.find(value);
+        return this.calcHeight(node);
+    }
+
+    calcHeight(node) {
+        if (node === null) return -1;
+
+        const leftHeight = this.calcHeight(node.left);
+        const rightHeight = this.calcHeight(node.right);
+
+        return Math.max(leftHeight, rightHeight) + 1;
     }
 
     depth(value) {
+        if (value === null) return;
+        return this.calcDepth(this.root, value, 0);
+    }
+
+    calcDepth(node, value, currentDepth) {
+        if (node === null) return -1;
+        if (node.data === value) return currentDepth;
+
+        const leftResult = this.calcDepth(node.left, value, currentDepth + 1);
+        if (leftResult !== -1) return leftResult;
+
+        const rightResult = this.calcDepth(node.right, value, currentDepth + 1);
+        return rightResult; 
+        
+
 
     }
 
     isBalanced() {
+      return this.checkBalance(this.root);
 
+    }
+
+    checkBalance(node) {
+        if (node === null) return true;
+        const leftHeight = this.calcHeight(node.left);
+        const rightHeight = this.calcHeight(node.right);
+
+        if (Math.abs(leftHeight - rightHeight) > 1) return false;
+       
+        return this.checkBalance(node.left) && this.checkBalance(node.right);
     }
 
     rebalance() {
+        const newArr = [];
+        this.inOrderForEach(value => newArr.push(value));
 
+        this.root = this.buildTree(newArr);
     }
-
-
-
 }
 
-/*const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-console.log("Root is:", tree.root);
-tree.insert(50);
-tree.insert(25);
-tree.delete(7);
-tree.delete(23);
-tree.find(67);
-prettyPrint(tree.root);
-*/
-const tree = new Tree([5, 3, 7, 1, 9]);
-console.log(tree.find(7));  // Should return the node with data: 7
-console.log(tree.find(99)); // Should return null
-prettyPrint(tree.root);
+
